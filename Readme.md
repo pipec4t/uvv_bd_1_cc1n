@@ -3,9 +3,9 @@
 </div>
 
 <div align="center">
-<h3> Professor: Abrantes Araujo Silva Filho. </h3>
+<h3> Professor: Abrantes Araujo Silva Filho </h3>
 <h3> Aluno: Victor Cassiano de Freitas </h3>
-<h3> Turma: CC1N. </h3>
+<h3> Turma: CC1N </h3>
 <h3> 2022/2 </h3>
 </div> 
 
