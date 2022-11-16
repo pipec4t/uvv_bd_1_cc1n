@@ -1,26 +1,25 @@
-  /*
-  ========Criando o usuário victor========
-  */
+--Criação do Usuário victor.
+CREATE user 'victor'@'localhost' IDENTIFIED BY 'computacao@raiz'; 
 
-CREATE user 'victor'@'localhost' IDENTIFIED BY 'computacao@raiz';
-
-  /*
-  ========Criando o banco de dados uvv========
-  */
-
-CREATE DATABASE uvv;
+--Criação do Banco de Dados UVV.
+CREATE DATABASE uvv; 
 
 GRANT all ON uvv.* to 'victor'@'localhost';
 
 flush privileges;
 
-use uvv;
+--Utilizar o Banco de Dados uvv.
+use uvv; 
 
   /*
-  ========Criando as tabelas========
+  Agora iremos criar as tabelas do Banco de Dados uvv.
+  Note que no MariaDB, Banco de Dados e Schemas são
+  a mesma coisa, portanto, é menos uma coisa no qual
+  precisamos criar para realizar o script.
   */
 
-CREATE TABLE cargos (
+--Criação da tabela cargos.
+CREATE TABLE cargos ( 
                 id_cargo VARCHAR(10) NOT NULL,
                 cargo VARCHAR(35) NOT NULL,
                 salario_minimo DECIMAL(8,2),
@@ -43,7 +42,8 @@ CREATE UNIQUE INDEX cargos_cargo_ak
  ON cargos
  ( cargo );
 
-CREATE TABLE regioes (
+--Criação da tabela regiões. 
+CREATE TABLE regioes ( 
                 id_regiao INT NOT NULL,
                 nome VARCHAR(25) NOT NULL,
                 PRIMARY KEY (id_regiao)
@@ -60,7 +60,8 @@ CREATE UNIQUE INDEX regioes_nome_ak
  ON regioes
  ( nome );
 
-CREATE TABLE paises (
+--Criação da tabela países.
+CREATE TABLE paises ( 
                 id_pais CHAR(2) NOT NULL,
                 nome VARCHAR(50) NOT NULL,
                 id_regiao INT,
@@ -80,7 +81,8 @@ CREATE UNIQUE INDEX paises_nome_ak
  ON paises
  ( nome );
 
-CREATE TABLE localizacoes (
+--Criação da tabela localizações.
+CREATE TABLE localizacoes ( 
                 id_localizacao INT NOT NULL,
                 endereco VARCHAR(50),
                 cep VARCHAR(12),
@@ -104,8 +106,8 @@ ALTER TABLE localizacoes MODIFY COLUMN uf VARCHAR(25) COMMENT 'Estado de cada lo
 
 ALTER TABLE localizacoes MODIFY COLUMN id_pais CHAR(2) COMMENT 'Foreign Key que identifica o país de cada local da empresa.';
 
-
-CREATE TABLE departamentos (
+--Criação da tabela departamentos.
+CREATE TABLE departamentos ( 
                 id_departamento INT NOT NULL,
                 nome VARCHAR(50),
                 id_localizacao INT,
@@ -128,7 +130,8 @@ CREATE UNIQUE INDEX departamentos_nome_ak
  ON departamentos
  ( nome );
 
-CREATE TABLE empregados (
+--Criação da tabela empregados.
+CREATE TABLE empregados ( 
                 id_empregado INT NOT NULL,
                 nome VARCHAR(75) NOT NULL,
                 email VARCHAR(35) NOT NULL,
@@ -169,7 +172,8 @@ CREATE UNIQUE INDEX empregados_email_ak
  ON empregados
  ( email );
 
-CREATE TABLE historico_cargos (
+--Criação da tabela historico_cargos.
+CREATE TABLE historico_cargos ( 
                 id_empregado INT NOT NULL,
                 data_inicial DATE NOT NULL,
                 data_final DATE NOT NULL,
@@ -191,10 +195,25 @@ ALTER TABLE historico_cargos MODIFY COLUMN id_cargo VARCHAR(10) COMMENT 'Foreign
 ALTER TABLE historico_cargos MODIFY COLUMN id_departamento INTEGER COMMENT 'FK que identifica o departamento antigo do empregado.';
 
   /*
-  ========Inserindo os dados nas tabelas criadas========
+  Agora iremos inserir os dados nas tabelas.
+  Note que estamos inserindo os dados antes 
+  de criar as constraints das tabelas para
+  verificar os dados que estamos inserindo.
+  Fazemos isso pois estamos recriando uma 
+  tabela já existente, com dados já existentes,
+  e, como o projeto das tabelas possuem
+  alguns erros, é necessário fazer este 
+  truque para que consigamos inserir os dados
+  sem que ocorra algum erro. Porém, não deve
+  haver grandes problemas, pois a tabela da
+  qual estamos retirando os dados já possuia
+  essas constraints, então os dados já foram
+  verificados. 
+  Fazemos isso em ambos os softwares.
   */
 
-INSERT INTO regioes (id_regiao, nome)
+--Inserção dos dados da tabela regiões.
+INSERT INTO regioes (id_regiao, nome) 
 VALUES (1, 'Europe');
 INSERT INTO regioes (id_regiao, nome)
 VALUES (2, 'Americas');
@@ -203,7 +222,8 @@ VALUES (3, 'Asia');
 INSERT INTO regioes (id_regiao, nome)
 VALUES (4, 'Middle East and Africa');
 
-INSERT INTO paises (id_pais, nome, id_regiao)
+--Inserção dos dados da tabela países.
+INSERT INTO paises (id_pais, nome, id_regiao) 
 VALUES ('AR', 'Argentina', 2);
 INSERT INTO paises (id_pais, nome, id_regiao)
 VALUES ('AU', 'Australia', 3);
@@ -254,7 +274,8 @@ VALUES ('ZM', 'Zambia', 4);
 INSERT INTO paises (id_pais, nome, id_regiao)
 VALUES ('ZW', 'Zimbabwe', 4);
 
-INSERT INTO localizacoes (id_localizacao, endereco, cep, cidade, uf, id_pais)
+--Inserção dos dados da tabela localizações.
+INSERT INTO localizacoes (id_localizacao, endereco, cep, cidade, uf, id_pais) 
 VALUES (1000, '1297 Via Cola di Rie', '00989', 'Roma', 'null', 'IT');
 INSERT INTO localizacoes (id_localizacao, endereco, cep, cidade, uf, id_pais)
 VALUES (1100, '93091 Calle della Testa', '10934', 'Venice', 'null', 'IT');
@@ -301,7 +322,8 @@ VALUES (3100, 'Pieter Breughelstraat 837', '3029SK', 'Utrecht', 'Utrecht', 'NL')
 INSERT INTO localizacoes (id_localizacao, endereco, cep, cidade, uf, id_pais)
 VALUES (3200, 'Mariano Escobedo 9991', '11932', 'Mexico City', 'Distrito Federal,', 'MX');
 
-INSERT INTO departamentos (id_departamento, nome, id_localizacao, id_gerente)
+--Inserção dos dados da tabela departamentos.
+INSERT INTO departamentos (id_departamento, nome, id_localizacao, id_gerente) 
 VALUES (10, 'Administration', 1700, 200);
 INSERT INTO departamentos (id_departamento, nome, id_localizacao, id_gerente)
 VALUES (20, 'Marketing', 1800, 201);
@@ -356,7 +378,8 @@ VALUES (260, 'Recruiting', 1700, null);
 INSERT INTO departamentos (id_departamento, nome, id_localizacao, id_gerente)
 VALUES (270, 'Payroll', 1700, null);
 
-INSERT INTO cargos (id_cargo, cargo, salario_minimo, salario_maximo)
+--Inserção dos dados da tabela cargos. 
+INSERT INTO cargos (id_cargo, cargo, salario_minimo, salario_maximo) 
 VALUES ('AD_PRES', 'President', 20080, 40000);
 INSERT INTO cargos (id_cargo, cargo, salario_minimo, salario_maximo)
 VALUES ('AD_VP', 'Administration Vice President', 15000, 30000);
@@ -395,6 +418,7 @@ VALUES ('HR_REP', 'Human Resources Representative', 4000, 9000);
 INSERT INTO cargos (id_cargo, cargo, salario_minimo, salario_maximo)
 VALUES ('PR_REP', 'Public Relations Representative', 4500, 10500);
 
+--Inserção dos dados da tabela empregados.
 INSERT INTO empregados (id_empregado, nome, email, telefone, data_contratacao, id_cargo, salario, comissao, id_supervisor, id_departamento) 
 VALUES (100, 'Steven King', 'SKING', '515.123.4567', '2003-06-17','AD_PRES', 24000, null, null, 90);
 INSERT INTO empregados (id_empregado, nome, email, telefone, data_contratacao, id_cargo, salario, comissao, id_supervisor, id_departamento) 
@@ -610,7 +634,8 @@ VALUES (205, 'Shelley Higgins', 'SHIGGINS', '515.123.8080', '2002-06-07','AC_MGR
 INSERT INTO empregados (id_empregado, nome, email, telefone, data_contratacao, id_cargo, salario, comissao, id_supervisor, id_departamento) 
 VALUES (206, 'William Gietz', 'WGIETZ', '515.123.8181', '2002-06-07','AC_ACCOUNT', 8300, null, 205, 110);
 
-INSERT INTO historico_cargos (id_empregado, data_inicial, data_final, id_cargo, id_departamento)
+--Inserção dos dados da tabela historico_cargos. 
+INSERT INTO historico_cargos (id_empregado, data_inicial, data_final, id_cargo, id_departamento) 
 VALUES (102, '2001-01-13', '2006-07-24', 'IT_PROG', 60);
 INSERT INTO historico_cargos (id_empregado, data_inicial, data_final, id_cargo, id_departamento)
 VALUES (101, '1997-09-21', '2001-10-27', 'AC_ACCOUNT', 110);
@@ -632,65 +657,81 @@ INSERT INTO historico_cargos (id_empregado, data_inicial, data_final, id_cargo, 
 VALUES (200, '2002-07-01', '2006-12-31', 'AC_ACCOUNT', 90);
 
   /*
-  ========Inserindo as constraints nas tabelas criadas========
+  Agora sim podemos alterar as tabelas e adicionar
+  as constraints necessárias para verificar os dados.
   */
 
-ALTER TABLE empregados ADD CONSTRAINT cargos_empregados_fk
+--Adicionando constraint na tabela empregados.
+ALTER TABLE empregados ADD CONSTRAINT cargos_empregados_fk 
 FOREIGN KEY (id_cargo)
 REFERENCES cargos (id_cargo)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE historico_cargos ADD CONSTRAINT cargos_historico_cargos_fk
+--Adicionando constraint na tabela historico_cargos.
+ALTER TABLE historico_cargos ADD CONSTRAINT cargos_historico_cargos_fk 
 FOREIGN KEY (id_cargo)
 REFERENCES cargos (id_cargo)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE paises ADD CONSTRAINT regioes_paises_fk
+--Adicionando constraint na tabela países.
+ALTER TABLE paises ADD CONSTRAINT regioes_paises_fk 
 FOREIGN KEY (id_regiao)
 REFERENCES regioes (id_regiao)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE localizacoes ADD CONSTRAINT paises_localizacoes_fk
+--Adicionando constraint na tabela localizações.
+ALTER TABLE localizacoes ADD CONSTRAINT paises_localizacoes_fk 
 FOREIGN KEY (id_pais)
 REFERENCES paises (id_pais)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE departamentos ADD CONSTRAINT localizacoes_departamentos_fk
+--Adicionando constraint na tabela departamentos.
+ALTER TABLE departamentos ADD CONSTRAINT localizacoes_departamentos_fk 
 FOREIGN KEY (id_localizacao)
 REFERENCES localizacoes (id_localizacao)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE empregados ADD CONSTRAINT departamentos_empregados_fk
+--Adicionando constraint na tabela empregados.
+ALTER TABLE empregados ADD CONSTRAINT departamentos_empregados_fk 
 FOREIGN KEY (id_departamento)
 REFERENCES departamentos (id_departamento)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE historico_cargos ADD CONSTRAINT departamentos_historico_cargos_fk
+--Adicionando constraint na tabela historico_cargos.
+ALTER TABLE historico_cargos ADD CONSTRAINT departamentos_historico_cargos_fk 
 FOREIGN KEY (id_departamento)
 REFERENCES departamentos (id_departamento)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE historico_cargos ADD CONSTRAINT empregados_historico_cargos_fk
+--Adicionando constraint na tabela historico_cargos.
+ALTER TABLE historico_cargos ADD CONSTRAINT empregados_historico_cargos_fk 
 FOREIGN KEY (id_empregado)
 REFERENCES empregados (id_empregado)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE empregados ADD CONSTRAINT empregados_empregados_fk
+--Adicionando constraint na tabela empregados.
+ALTER TABLE empregados ADD CONSTRAINT empregados_empregados_fk 
 FOREIGN KEY (id_supervisor)
 REFERENCES empregados (id_empregado)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE departamentos ADD CONSTRAINT empregados_departamentos_fk
+--Adicionando constraint na tabela departamentos.
+ALTER TABLE departamentos ADD CONSTRAINT empregados_departamentos_fk 
 FOREIGN KEY (id_gerente)
 REFERENCES empregados (id_empregado)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
+
+/* 
+Agora todo o Projeto Lógico HR está criado no MariaDB!
+Seu trabalho está finalizado. 
+*/
